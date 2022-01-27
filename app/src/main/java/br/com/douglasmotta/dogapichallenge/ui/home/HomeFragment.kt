@@ -76,7 +76,7 @@ class HomeFragment : Fragment() {
                         }
                         is LoadState.NotLoading -> {
                             setShimmerVisibility(false)
-                            FLIPPER_CHILD_DOS
+                            FLIPPER_CHILD_DOG
                         }
                         is LoadState.Error -> {
                             setShimmerVisibility(false)
@@ -107,7 +107,7 @@ class HomeFragment : Fragment() {
 
     companion object {
         private const val FLIPPER_CHILD_LOADING = 0
-        private const val FLIPPER_CHILD_DOS = 1
+        private const val FLIPPER_CHILD_DOG = 1
         private const val FLIPPER_CHILD_ERROR = 2
     }
 }
