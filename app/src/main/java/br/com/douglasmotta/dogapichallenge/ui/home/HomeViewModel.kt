@@ -1,13 +1,28 @@
 package br.com.douglasmotta.dogapichallenge.ui.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import br.com.douglasmotta.dogapichallenge.domain.model.Dog
+import br.com.douglasmotta.dogapichallenge.domain.usecase.SearchDogsUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class HomeViewModel : ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val searchDogsUseCase: SearchDogsUseCase
+) : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
+    fun dogsPagingData(query: String = ""): Flow<PagingData<Dog>> {
+        return searchDogsUseCase(
+            SearchDogsUseCase.SearchDogParams(query, getPagingConfig())
+        ).cachedIn(viewModelScope)
     }
-    val text: LiveData<String> = _text
+
+    private fun getPagingConfig() = PagingConfig(
+        pageSize = 20
+    )
 }

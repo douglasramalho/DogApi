@@ -4,42 +4,110 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import br.com.douglasmotta.dogapichallenge.R
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.*
+import androidx.paging.LoadState
+import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.douglasmotta.dogapichallenge.databinding.FragmentHomeBinding
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    private lateinit var homeViewModel: HomeViewModel
     private var _binding: FragmentHomeBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
+
+    private val viewModel: HomeViewModel by viewModels()
+
+    private lateinit var dogsAdapter: DogsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
+    ) = FragmentHomeBinding.inflate(inflater, container, false).apply {
+        _binding = this
+    }.root
 
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
-        return root
+        initDogsAdapter()
+        collectDogs()
+        collectInitialLoadState()
+    }
+
+    private fun collectDogs() {
+        lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.dogsPagingData().collect { pagingData ->
+                    dogsAdapter.submitData(pagingData)
+                }
+            }
+        }
+    }
+
+    private fun initDogsAdapter() {
+        dogsAdapter = DogsAdapter()
+        with(binding.recyclerDogs) {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = dogsAdapter.withLoadStateFooter(
+                footer = DogsLoadStateAdapter(
+                    dogsAdapter::retry
+                )
+            )
+        }
+    }
+
+    private fun collectInitialLoadState() {
+        lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                dogsAdapter.loadStateFlow.collectLatest { loadState ->
+                    binding.flipperHome.displayedChild = when (loadState.refresh) {
+                        is LoadState.Loading -> {
+                            setShimmerVisibility(true)
+                            FLIPPER_CHILD_LOADING
+                        }
+                        is LoadState.NotLoading -> {
+                            setShimmerVisibility(false)
+                            FLIPPER_CHILD_DOS
+                        }
+                        is LoadState.Error -> {
+                            setShimmerVisibility(false)
+                            binding.includeViewCharactersErrorState.buttonRetry.setOnClickListener {
+                                dogsAdapter.retry()
+                            }
+                            FLIPPER_CHILD_ERROR
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setShimmerVisibility(visibility: Boolean) {
+        binding.includeViewCharactersLoadingState.shimmerCharacters.run {
+            isVisible = visibility
+            if (visibility) {
+                startShimmer()
+            } else stopShimmer()
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val FLIPPER_CHILD_LOADING = 0
+        private const val FLIPPER_CHILD_DOS = 1
+        private const val FLIPPER_CHILD_ERROR = 2
     }
 }

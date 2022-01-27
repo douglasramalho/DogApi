@@ -3,4 +3,11 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+
+    <!-- Common -->
+    <string name="common_try_again">Try again</string>
+
+    <!-- Home -->
+    <string name="error_loading_dogs">Error when trying to load dog images</string>
+    <string name="error_loading_more_try_again">Error when trying to load the next page. Try again</string>
 </resources>
