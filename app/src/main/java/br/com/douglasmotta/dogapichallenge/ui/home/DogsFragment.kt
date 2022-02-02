@@ -18,7 +18,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.douglasmotta.dogapichallenge.R
-import br.com.douglasmotta.dogapichallenge.databinding.FragmentHomeBinding
+import br.com.douglasmotta.dogapichallenge.databinding.FragmentDogsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
@@ -26,12 +26,12 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(), AdapterView.OnItemSelectedListener {
+class DogsFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: FragmentDogsBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: HomeViewModel by viewModels()
+    private val viewModel: DogsViewModel by viewModels()
 
     private lateinit var dogsAdapter: DogsAdapter
 
@@ -41,7 +41,7 @@ class HomeFragment : Fragment(), AdapterView.OnItemSelectedListener {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) = FragmentHomeBinding.inflate(inflater, container, false).apply {
+    ) = FragmentDogsBinding.inflate(inflater, container, false).apply {
         _binding = this
     }.root
 

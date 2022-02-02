@@ -3,23 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_dogs">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="br.com.douglasmotta.dogapichallenge.ui.home.HomeFragment"
+        android:id="@+id/navigation_dogs"
+        android:name="br.com.douglasmotta.dogapichallenge.ui.home.DogsFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_dogs" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="br.com.douglasmotta.dogapichallenge.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_search"
+        android:name="br.com.douglasmotta.dogapichallenge.ui.search.SearchFragment"
+        android:label="@string/title_search"
+        tools:layout="@layout/fragment_dogs" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_about"
         android:name="br.com.douglasmotta.dogapichallenge.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
+        android:label="@string/title_about"
         tools:layout="@layout/fragment_notifications" />
 </navigation>

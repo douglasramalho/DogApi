@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">DogApiChallenge</string>
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_search">Search</string>
+    <string name="title_about">About</string>
 
     <!-- Common -->
     <string name="common_try_again">Try again</string>
@@ -18,4 +18,7 @@
         <item>Z-A</item>
     </string-array>
     <string name="order_default_item">A-Z</string>
+
+    <!-- Search -->
+    <string name="search_menu_title">Search</string>
 </resources>

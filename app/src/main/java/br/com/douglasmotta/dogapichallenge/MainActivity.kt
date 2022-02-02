@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import br.com.douglasmotta.dogapichallenge.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
+                R.id.navigation_dogs, R.id.navigation_search, R.id.navigation_about
             )
         )
         binding.toolbarApp.setupWithNavController(navController, appBarConfiguration)

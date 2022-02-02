@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class DogsViewModel @Inject constructor(
     private val searchDogsUseCase: SearchDogsUseCase
 ) : ViewModel() {
 
