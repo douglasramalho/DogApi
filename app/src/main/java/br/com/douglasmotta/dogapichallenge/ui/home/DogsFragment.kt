@@ -165,8 +165,11 @@ class DogsFragment : Fragment(), AdapterView.OnItemSelectedListener {
         position: Int,
         id: Long
     ) {
-        order = parent?.getItemAtPosition(position) as String
-        collectDogs()
+        val selectedOrder = parent?.getItemAtPosition(position) as String
+        if (selectedOrder != order) {
+            order = selectedOrder
+            collectDogs()
+        }
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {

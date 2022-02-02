@@ -26,6 +26,6 @@ class DogsViewModel @Inject constructor(
     }
 
     private fun getPagingConfig() = PagingConfig(
-        pageSize = 20
+        pageSize = 10
     )
 }

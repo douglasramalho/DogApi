@@ -14,6 +14,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -46,5 +47,10 @@ class DogsFragmentTest {
         ).check(
             ViewAssertions.matches(ViewMatchers.isDisplayed())
         )
+    }
+
+    @After
+    fun tearDown() {
+        server.shutdown()
     }
 }

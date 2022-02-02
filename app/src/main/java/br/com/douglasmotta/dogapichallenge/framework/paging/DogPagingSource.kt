@@ -30,12 +30,24 @@ class DogPagingSource(
             queries["order"] = queryData.sort.name.lowercase()
 
             val response = remoteDataSource.fetchDogs(queries)
+            if (response.isSuccessful) {
+                val headers = response.headers()
+                val totalResults = headers["pagination-count"]?.toInt() ?: 0
+                val currentPage = headers["pagination-page"]?.toInt() ?: 0
 
-            LoadResult.Page(
-                data = response.map { it.toDogDomain() },
-                prevKey = null,
-                nextKey = page + 1
-            )
+                response.body()?.let { dogResponseList ->
+                    LoadResult.Page(
+                        data = dogResponseList.map { it.toDogDomain() },
+                        prevKey = null,
+                        nextKey = if (currentPage * LIMIT < totalResults) {
+                            page + 1
+                        } else null
+                    )
+                } ?: LoadResult.Error(Throwable("Empty data"))
+
+            } else {
+                LoadResult.Error(Throwable("Generic error"))
+            }
         } catch (e: Exception) {
             LoadResult.Error(e)
         }

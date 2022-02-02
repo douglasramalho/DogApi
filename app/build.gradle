@@ -22,8 +22,14 @@ android {
 
         testInstrumentationRunner "br.com.douglasmotta.dogapichallenge.CustomTestRunner"
 
+        testInstrumentationRunnerArguments clearPackageData: 'true'
+
         buildConfigField "String", "API_KEY", apikeyProperties['API_KEY']
         buildConfigField "String", "BASE_URL", '"https://api.thedogapi.com/v1/"'
+    }
+
+    testOptions {
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
 
     buildTypes {
