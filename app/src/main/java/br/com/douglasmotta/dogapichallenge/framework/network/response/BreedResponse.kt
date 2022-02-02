@@ -7,13 +7,13 @@ data class BreedResponse(
     @SerializedName("name")
     val name: String,
     @SerializedName("bred_for")
-    val origin: String,
+    val origin: String?,
     @SerializedName("breed_group")
-    val group: String
+    val group: String?
 )
 
 fun BreedResponse.toBreedDomain() = Breed(
     name = this.name,
-    origin = this.origin,
-    group = this.group
+    origin = this.origin ?: "",
+    group = this.group ?: ""
 )

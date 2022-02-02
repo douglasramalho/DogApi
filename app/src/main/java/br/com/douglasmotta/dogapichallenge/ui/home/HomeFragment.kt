@@ -17,6 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -81,6 +82,9 @@ class HomeFragment : Fragment() {
                             FLIPPER_CHILD_DOG
                         }
                         is LoadState.Error -> {
+                            val errorState = loadState.refresh as LoadState.Error
+                            Timber.e(errorState.error)
+
                             setShimmerVisibility(false)
                             binding.includeViewCharactersErrorState.buttonRetry.setOnClickListener {
                                 dogsAdapter.retry()
