@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/navigation_about"
-        android:name="br.com.douglasmotta.dogapichallenge.ui.notifications.NotificationsFragment"
+        android:name="br.com.douglasmotta.dogapichallenge.ui.notifications.AboutFragment"
         android:label="@string/title_about"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_about" />
 </navigation>
