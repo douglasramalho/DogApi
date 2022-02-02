@@ -1,25 +1,21 @@
 package br.com.douglasmotta.dogapichallenge.ui.search
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import br.com.douglasmotta.dogapichallenge.databinding.FragmentSearchBinding
 import android.app.SearchManager
 import android.content.Context
+import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.douglasmotta.dogapichallenge.R
+import br.com.douglasmotta.dogapichallenge.databinding.FragmentSearchBinding
 import br.com.douglasmotta.dogapichallenge.domain.ResultStatus
-import br.com.douglasmotta.dogapichallenge.domain.model.Breed
-import br.com.douglasmotta.dogapichallenge.ui.home.DogsAdapter
-import br.com.douglasmotta.dogapichallenge.ui.home.DogsLoadStateAdapter
-import br.com.douglasmotta.dogapichallenge.ui.home.DogsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -30,7 +26,7 @@ class SearchFragment : Fragment() {
 
     private val viewModel: SearchViewModel by viewModels()
 
-    private lateinit var dogsAdapter: DogsAdapter
+    private lateinit var searchAdapter: SearchAdapter
 
     private lateinit var searchView: SearchView
     private var queryTextListener: SearchView.OnQueryTextListener? = null
@@ -50,15 +46,14 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initDogsAdapter()
+        initBreedsAdapter()
     }
 
-    private fun initDogsAdapter() {
-        dogsAdapter = DogsAdapter()
-        with(binding.recyclerDogs) {
+    private fun initBreedsAdapter() {
+        searchAdapter = SearchAdapter()
+        with(binding.recyclerBreeds) {
             setHasFixedSize(true)
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = dogsAdapter
+            adapter = searchAdapter
         }
     }
 
@@ -80,14 +75,14 @@ class SearchFragment : Fragment() {
                 queryTextListener = object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean {
                         query?.let {
-                            lifecycleScope.launchWhenCreated {
+                            lifecycleScope.launch {
                                 viewLifecycleOwner.lifecycle.repeatOnLifecycle(
                                     Lifecycle.State.STARTED
                                 ) {
                                     viewModel.searchBreeds(it).collect {
                                         when (it) {
                                             is ResultStatus.Success -> {
-                                                Timber.i(it.data.toString())
+                                                searchAdapter.submitList(it.data)
                                             }
                                             is ResultStatus.Error -> {
                                                 Timber.e(it.throwable)

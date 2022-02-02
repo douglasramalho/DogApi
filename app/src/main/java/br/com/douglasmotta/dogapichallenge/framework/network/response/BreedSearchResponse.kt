@@ -8,8 +8,8 @@ data class BreedSearchResponse(
     val id: String,
     @SerializedName("name")
     val name: String,
-    @SerializedName("temperament")
-    val temperament: String?,
+    @SerializedName("breed_group")
+    val group: String?,
     @SerializedName("origin")
     val origin: String?
 )
@@ -17,6 +17,6 @@ data class BreedSearchResponse(
 fun BreedSearchResponse.toBreedModel() = Breed(
     id = this.id,
     name = this.name,
-    temperament = this.temperament ?: "",
+    group = this.group ?: "",
     origin = this.origin ?: ""
 )
