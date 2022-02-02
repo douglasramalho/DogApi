@@ -17,4 +17,5 @@
         <item>A-Z</item>
         <item>Z-A</item>
     </string-array>
+    <string name="order_default_item">A-Z</string>
 </resources>

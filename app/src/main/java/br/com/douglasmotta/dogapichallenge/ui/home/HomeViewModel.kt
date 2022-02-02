@@ -16,9 +16,12 @@ class HomeViewModel @Inject constructor(
     private val searchDogsUseCase: SearchDogsUseCase
 ) : ViewModel() {
 
-    fun dogsPagingData(query: String = ""): Flow<PagingData<Dog>> {
+    fun dogsPagingData(
+        query: String = "",
+        order: String
+    ): Flow<PagingData<Dog>> {
         return searchDogsUseCase(
-            SearchDogsUseCase.SearchDogParams(query, getPagingConfig())
+            SearchDogsUseCase.SearchDogParams(query, order, getPagingConfig())
         ).cachedIn(viewModelScope)
     }
 

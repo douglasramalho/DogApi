@@ -4,12 +4,13 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import br.com.douglasmotta.dogapichallenge.data.DogRemoteDataSource
 import br.com.douglasmotta.dogapichallenge.domain.model.Dog
+import br.com.douglasmotta.dogapichallenge.domain.model.QueryData
 import br.com.douglasmotta.dogapichallenge.framework.network.response.toDogDomain
 import java.lang.Exception
 
 class DogPagingSource(
     private val remoteDataSource: DogRemoteDataSource,
-    private val query: String
+    private val queryData: QueryData
 ): PagingSource<Int, Dog>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Dog> {
@@ -21,9 +22,12 @@ class DogPagingSource(
                 "limit" to LIMIT.toString()
             )
 
+            val query = queryData.query
             if (query.isNotEmpty()) {
                 queries["nameStartsWith"] = query
             }
+
+            queries["order"] = queryData.sort.name.lowercase()
 
             val response = remoteDataSource.searchDogs(queries)
 

@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
@@ -24,7 +26,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -32,6 +34,8 @@ class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
 
     private lateinit var dogsAdapter: DogsAdapter
+
+    private lateinit var order: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,6 +47,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initOrderSpinner()
         initDogsAdapter()
         collectDogs()
         collectInitialLoadState()
@@ -56,12 +61,18 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun collectDogs() {
-        lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.dogsPagingData().collect { pagingData ->
-                    dogsAdapter.submitData(pagingData)
-                }
+    private fun initOrderSpinner() {
+        order = getString(R.string.order_default_item)
+
+        ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.order_array,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.spinnerOrder.also {
+                it.adapter = adapter
+                it.onItemSelectedListener = this
             }
         }
     }
@@ -76,6 +87,16 @@ class HomeFragment : Fragment() {
                     dogsAdapter::retry
                 )
             )
+        }
+    }
+
+    private fun collectDogs() {
+        lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.dogsPagingData(order = order).collect { pagingData ->
+                    dogsAdapter.submitData(pagingData)
+                }
+            }
         }
     }
 
@@ -136,6 +157,20 @@ class HomeFragment : Fragment() {
         binding.recyclerDogs.layoutManager = if (listFormatTag == ListFormat.LIST.tag) {
             LinearLayoutManager(context)
         } else GridLayoutManager(context, GRID_SPAN_COUNT)
+    }
+
+    override fun onItemSelected(
+        parent: AdapterView<*>?,
+        view: View?,
+        position: Int,
+        id: Long
+    ) {
+        order = parent?.getItemAtPosition(position) as String
+        collectDogs()
+    }
+
+    override fun onNothingSelected(p0: AdapterView<*>?) {
+        // Do nothing
     }
 
     override fun onDestroyView() {
