@@ -8,12 +8,19 @@ import android.content.Context
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.douglasmotta.dogapichallenge.R
+import br.com.douglasmotta.dogapichallenge.domain.ResultStatus
+import br.com.douglasmotta.dogapichallenge.domain.model.Breed
 import br.com.douglasmotta.dogapichallenge.ui.home.DogsAdapter
 import br.com.douglasmotta.dogapichallenge.ui.home.DogsLoadStateAdapter
 import br.com.douglasmotta.dogapichallenge.ui.home.DogsViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import timber.log.Timber
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
@@ -72,7 +79,28 @@ class SearchFragment : Fragment() {
 
                 queryTextListener = object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean {
+                        query?.let {
+                            lifecycleScope.launchWhenCreated {
+                                viewLifecycleOwner.lifecycle.repeatOnLifecycle(
+                                    Lifecycle.State.STARTED
+                                ) {
+                                    viewModel.searchBreeds(it).collect {
+                                        when (it) {
+                                            is ResultStatus.Success -> {
+                                                Timber.i(it.data.toString())
+                                            }
+                                            is ResultStatus.Error -> {
+                                                Timber.e(it.throwable)
+                                            }
+                                            else -> {
+                                                // Do nothing
+                                            }
+                                        }
+                                    }
+                                }
+                            }
 
+                        }
                         return true
                     }
 

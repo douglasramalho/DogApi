@@ -6,22 +6,22 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import br.com.douglasmotta.dogapichallenge.domain.model.Dog
-import br.com.douglasmotta.dogapichallenge.domain.usecase.SearchDogsUseCase
+import br.com.douglasmotta.dogapichallenge.domain.usecase.FetchDogsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @HiltViewModel
 class DogsViewModel @Inject constructor(
-    private val searchDogsUseCase: SearchDogsUseCase
+    private val fetchDogsUseCase: FetchDogsUseCase
 ) : ViewModel() {
 
     fun dogsPagingData(
         query: String = "",
         order: String
     ): Flow<PagingData<Dog>> {
-        return searchDogsUseCase(
-            SearchDogsUseCase.SearchDogParams(query, order, getPagingConfig())
+        return fetchDogsUseCase(
+            FetchDogsUseCase.SearchDogParams(query, order, getPagingConfig())
         ).cachedIn(viewModelScope)
     }
 

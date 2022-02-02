@@ -10,7 +10,7 @@ import br.com.douglasmotta.dogapichallenge.domain.model.SortType
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-interface SearchDogsUseCase {
+interface FetchDogsUseCase {
     operator fun invoke(params: SearchDogParams): Flow<PagingData<Dog>>
 
     data class SearchDogParams(
@@ -20,11 +20,11 @@ interface SearchDogsUseCase {
     )
 }
 
-class SearchDogsUseCaseImpl @Inject constructor(
+class FetchDogsUseCaseImpl @Inject constructor(
     private val repository: DogRepository
-) : SearchDogsUseCase, PagingUseCase<SearchDogsUseCase.SearchDogParams, Dog>() {
+) : FetchDogsUseCase, PagingUseCase<FetchDogsUseCase.SearchDogParams, Dog>() {
 
-    override fun createFlowObservable(params: SearchDogsUseCase.SearchDogParams): Flow<PagingData<Dog>> {
+    override fun createFlowObservable(params: FetchDogsUseCase.SearchDogParams): Flow<PagingData<Dog>> {
         val sortType = when (params.sort) {
             "A-Z" -> SortType.ASC
             else -> SortType.DESC
@@ -32,7 +32,7 @@ class SearchDogsUseCaseImpl @Inject constructor(
 
         val queryData = QueryData(params.query, sortType)
 
-        val pagingSource = repository.searchDogs(queryData)
+        val pagingSource = repository.fetchDogs(queryData)
         return Pager(config = params.pagingConfig) {
             pagingSource
         }.flow

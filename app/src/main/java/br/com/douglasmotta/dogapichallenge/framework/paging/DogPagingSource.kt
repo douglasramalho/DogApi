@@ -29,7 +29,7 @@ class DogPagingSource(
 
             queries["order"] = queryData.sort.name.lowercase()
 
-            val response = remoteDataSource.searchDogs(queries)
+            val response = remoteDataSource.fetchDogs(queries)
 
             LoadResult.Page(
                 data = response.map { it.toDogDomain() },
