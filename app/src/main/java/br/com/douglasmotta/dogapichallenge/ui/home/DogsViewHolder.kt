@@ -12,14 +12,17 @@ class DogsViewHolder(
     itemCharacterBinding: ItemDogBinding
 ) : RecyclerView.ViewHolder(itemCharacterBinding.root) {
 
-    private val imageCharacter = itemCharacterBinding.imageDog
+    private val imageDog = itemCharacterBinding.imageDog
+    private val textName = itemCharacterBinding.textName
 
     fun bind(dog: Dog) {
         Glide.with(itemView)
             .load(dog.imageUrl)
             .fallback(R.drawable.ic_img_loading_error)
             .error(R.drawable.ic_img_loading_error)
-            .into(imageCharacter)
+            .into(imageDog)
+
+        textName.text = dog.breed.name
     }
 
     companion object {

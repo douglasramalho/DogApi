@@ -1,7 +1,7 @@
 package br.com.douglasmotta.dogapichallenge.domain.model
 
 data class Breed(
-    val name: String,
-    val origin: String,
-    val group: String
+    val name: String = "Unspecified",
+    val origin: String = "",
+    val group: String = ""
 )

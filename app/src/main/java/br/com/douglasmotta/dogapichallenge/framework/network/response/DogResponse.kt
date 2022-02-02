@@ -1,5 +1,6 @@
 package br.com.douglasmotta.dogapichallenge.framework.network.response
 
+import br.com.douglasmotta.dogapichallenge.domain.model.Breed
 import br.com.douglasmotta.dogapichallenge.domain.model.Dog
 import com.google.gson.annotations.SerializedName
 
@@ -15,5 +16,7 @@ data class DogResponse(
 fun DogResponse.toDogDomain() = Dog(
     id = this.id,
     imageUrl = this.imageUrl,
-    breeds = this.breeds.map { it.toBreedDomain() }
+    breed = if (this.breeds.isNotEmpty()) {
+        this.breeds[0].toBreedDomain()
+    } else Breed()
 )
