@@ -10,11 +10,44 @@
         android:id="@+id/include_view_characters_loading_state"
         layout="@layout/include_dogs_loading_view" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_dogs"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/item_dog" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:padding="16dp">
+
+            <Spinner
+                android:id="@+id/spinner_order"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/image_list_format"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/image_list_format"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/list_format_description"
+                app:layout_constraintBottom_toBottomOf="@id/spinner_order"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/spinner_order"
+                app:srcCompat="@drawable/ic_list" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_dogs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/item_dog" />
+
+    </LinearLayout>
 
     <include
         android:id="@+id/include_view_characters_error_state"

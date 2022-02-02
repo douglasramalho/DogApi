@@ -10,4 +10,11 @@
     <!-- Home -->
     <string name="error_loading_dogs">Error when trying to load dog images</string>
     <string name="error_loading_more_try_again">Error when trying to load the next page. Try again</string>
+    <string name="list_format_description">Change list format</string>
+    <string name="list_format_grid">Grid</string>
+    <string name="list_format_listing">Listing</string>
+    <string-array name="order_array">
+        <item>A-Z</item>
+        <item>Z-A</item>
+    </string-array>
 </resources>
